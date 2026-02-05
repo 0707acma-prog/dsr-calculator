@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 주택담보대출 DSR 정밀 계산기 (고정금리 기간 반영)</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 35px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 26px;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+            margin-bottom: 5px;
+        }
+
+        .badge-container {
+            margin-top: 15px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.25);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin: 0 5px;
+        }
+
+        .content {
+            padding: 35px;
+        }
+
+        .section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 3px solid #667eea;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title .icon {
+            font-size: 22px;
+            margin-right: 10px;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #444;
+            margin-bottom: 10px;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 15px;
+            transition: all 0.3s;
+            font-family: inherit;
+        }
+
+        .input-group input:focus, .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-addon {
+            display: flex;
+            align-items: stretch;
+        }
+
+        .input-addon input {
+            border-radius: 10px 0 0 10px;
+            flex: 1;
+        }
+
+        .input-addon .unit {
+            background: #f5f5f5;
+            padding: 13px 16px;
+            border: 2px solid #e0e0e0;
+            border-left: none;
+            border-radius: 0 10px 10px 0;
+            font-size: 14px;
+            color: #666;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+        }
+
+        .korean-amount {
+            font-size: 13px;
+            color: #667eea;
+            margin-top: 6px;
+            font-weight: 600;
+            min-height: 20px;
+            padding-left: 4px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .info-badge {
+            background: #e8f4fd;
+            color: #1976d2;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-top: 10px;
+            line-height: 1.6;
+            border-left: 4px solid #1976d2;
+        }
+
+        .calculate-btn {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 19px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 25px;
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+        }
+
+        .result {
+            display: none;
+            margin-top: 35px;
+        }
+
+        .result.show {
+            display: block;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .result-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .result-title .icon {
+            font-size: 26px;
+            margin-right: 10px;
+        }
+
+        .result-main {
+            background: rgba(255,255,255,0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+        }
+
+        .result-main-label {
+            font-size: 15px;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .result-main-value {
+            font-size: 38px;
+            font-weight: 800;
+            color: #fff200;
+            margin-bottom: 8px;
+        }
+
+        .result-main-desc {
+            font-size: 13px;
+            opacity: 0.9;
+            line-height: 1.8;
+            white-space: pre-line;
+        }
+
+        .result-section {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        .result-section-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-item-label {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .result-item-value {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .stress-dsr-section {
+            background: rgba(255,255,255,0.15);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+        }
+
+        .stress-dsr-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .stress-dsr-title .icon {
+            margin-right: 8px;
+        }
+
+        .stress-dsr-item {
+            background: rgba(255,255,255,0.2);
+            padding: 18px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .stress-dsr-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .stress-dsr-item-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            opacity: 0.95;
+        }
+
+        .stress-dsr-item-row {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            margin-bottom: 6px;
+            line-height: 1.6;
+        }
+
+        .stress-dsr-item-row:last-child {
+            margin-bottom: 0;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255,255,255,0.2);
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #f8f9ff;
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 5px solid #667eea;
+        }
+
+        .info-box h3 {
+            color: #667eea;
+            font-size: 16px;
+            margin-bottom: 12px;
+            font-weight: 700;
+        }
+
+        .info-box ul {
+            list-style: none;
+            font-size: 13px;
+            color: #666;
+            line-height: 1.8;
+        }
+
+        .info-box ul li:before {
+            content: "✓ ";
+            color: #667eea;
+            font-weight: bold;
+            margin-right: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            display: inline-block;
+            margin-left: 5px;
+            cursor: help;
+        }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 300px;
+            background-color: #555;
+            color: #fff;
+            text-align: left;
+            border-radius: 8px;
+            padding: 12px;
+            position: absolute;
+            z-index: 1000;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -150px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            font-size: 12px;
+            line-height: 1.6;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+
+        .help-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: #667eea;
+            color: white;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2, .grid-3 {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 20px;
+            }
+            
+            .content {
+                padding: 25px 20px;
+            }
+
+            .result-main-value {
+                font-size: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🏦 주택담보대출 DSR 정밀 계산기</h1>
+            <p>2026년 스트레스 DSR 3단계 - 고정금리 기간별 차등 적용</p>
+            <div class="badge-container">
+                <span class="badge">고정금리 기간 반영</span>
+                <span class="badge">혼합형·주기형 정밀 계산</span>
+                <span class="badge">2025년 7월 기준</span>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- 소득 정보 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">💰</span>
+                    <span>소득 정보</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="annual-income">연소득 (세전)</label>
+                    <div class="input-addon">
+                        <input type="number" id="annual-income" placeholder="예: 100000000" value="100000000" oninput="updateKoreanAmount(this, 'annual-income-kr')">
+                        <span class="unit">원</span>
+                    </div>
+                    <div class="korean-amount" id="annual-income-kr">일억원</div>
+                </div>
+            </div>
+
+            <!-- 신규 주택담보대출 정보 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">🏠</span>
+                    <span>신규 주택담보대출 정보</span>
+                </div>
+                
+                <div class="input-group">
+                    <label for="loan-amount">주택담보대출 금액</label>
+                    <div class="input-addon">
+                        <input type="number" id="loan-amount" placeholder="예: 300000000" value="300000000" oninput="updateKoreanAmount(this, 'loan-amount-kr')">
+                        <span class="unit">원</span>
+                    </div>
+                    <div class="korean-amount" id="loan-amount-kr">삼억원</div>
+                </div>
+
+                <div class="grid-3">
+                    <div class="input-group">
+                        <label for="loan-period">대출 기간</label>
+                        <select id="loan-period">
+                            <option value="10">10년</option>
+                            <option value="15">15년</option>
+                            <option value="20">20년</option>
+                            <option value="25">25년</option>
+                            <option value="30" selected>30년</option>
+                            <option value="35">35년</option>
+                            <option value="40">40년</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="loan-rate">대출 금리</label>
+                        <div class="input-addon">
+                            <input type="number" id="loan-rate" placeholder="예: 4.8" value="4.8" step="0.1">
+                            <span class="unit">%</span>
+                        </div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="repayment-method">상환 방법</label>
+                        <select id="repayment-method">
+                            <option value="equal-payment">원리금균등</option>
+                            <option value="equal-principal" selected>원금균등</option>
+                            <option value="maturity">만기일시</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="loan-type">
+                        대출 금리 유형
+                        <span class="tooltip">
+                            <span class="help-icon">?</span>
+                            <span class="tooltiptext">
+                                <strong>변동형:</strong> 전 기간 변동금리<br>
+                                <strong>혼합형:</strong> 일정 기간 고정 후 변동<br>
+                                <strong>주기형:</strong> 일정 주기마다 금리 재조정<br>
+                                고정금리 기간에 따라 스트레스 DSR 적용률이 달라집니다.
+                            </span>
+                        </span>
+                    </label>
+                    <select id="loan-type" onchange="updateFixedPeriodOptions()">
+                        <option value="variable">변동형 (전 기간 변동금리)</option>
+                        <option value="mixed">혼합형 (고정+변동)</option>
+                        <option value="periodic">주기형 (주기별 재조정)</option>
+                    </select>
+                </div>
+
+                <div class="input-group" id="fixed-period-group" style="display: none;">
+                    <label for="fixed-period">
+                        고정금리 적용 기간
+                        <span class="tooltip">
+                            <span class="help-icon">?</span>
+                            <span class="tooltiptext">
+                                혼합형/주기형 대출의 고정금리 기간입니다.<br>
+                                <strong>5년 미만:</strong> 스트레스 금리 100% 적용<br>
+                                <strong>5~9년:</strong> 60~80% 적용 (혼합형), 30~40% 적용 (주기형)<br>
+                                <strong>9~21년 이상:</strong> 단계별 감면
+                            </span>
+                        </span>
+                    </label>
+                    <select id="fixed-period">
+                        <option value="0">고정금리 미적용 (전 기간 변동)</option>
+                        <option value="3">3년 고정</option>
+                        <option value="5">5년 고정</option>
+                        <option value="7">7년 고정</option>
+                        <option value="10">10년 고정</option>
+                        <option value="12">12년 고정</option>
+                        <option value="15">15년 고정</option>
+                        <option value="18">18년 고정</option>
+                        <option value="20">20년 고정</option>
+                        <option value="25">25년 이상 고정</option>
+                    </select>
+                    <div class="info-badge" id="fixed-period-info"></div>
+                </div>
+
+                <div class="input-group">
+                    <label for="region-type">담보 주택 소재지</label>
+                    <select id="region-type">
+                        <option value="metro">수도권 (서울/경기/인천)</option>
+                        <option value="local">비수도권 (지방)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 보유 대출 정보 -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="icon">📋</span>
+                    <span>보유 대출 정보</span>
+                </div>
+                
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label for="existing-interest">보유 대출 연이자 상환액</label>
+                        <div class="input-addon">
+                            <input type="number" id="existing-interest" placeholder="예: 5000000" value="5000000" oninput="updateKoreanAmount(this, 'existing-interest-kr')">
+                            <span class="unit">원</span>
+                        </div>
+                        <div class="korean-amount" id="existing-interest-kr">오백만원</div>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="existing-principal">보유 대출 연원금 상환액</label>
+                        <div class="input-addon">
+                            <input type="number" id="existing-principal" placeholder="예: 6100000" value="6100000" oninput="updateKoreanAmount(this, 'existing-principal-kr')">
+                            <span class="unit">원</span>
+                        </div>
+                        <div class="korean-amount" id="existing-principal-kr">육백십만원</div>
+                    </div>
+                </div>
+            </div>
+
+            <button class="calculate-btn" onclick="calculateDSR()">🎯 DSR 정밀 계산하기</button>
+
+            <!-- 계산 결과 -->
+            <div class="result" id="result">
+                <div class="result-box">
+                    <div class="result-title">
+                        <span class="icon">📊</span>
+                        <span>DSR 계산 결과</span>
+                    </div>
+                    
+                    <div class="result-main">
+                        <div class="result-main-label">기본 DSR</div>
+                        <div class="result-main-value" id="basic-dsr">0%</div>
+                        <div class="result-main-desc" id="basic-dsr-desc"></div>
+                    </div>
+
+                    <div class="result-section">
+                        <div class="result-section-title">📋 상세 내역</div>
+                        <div class="result-item">
+                            <span class="result-item-label">연소득</span>
+                            <span class="result-item-value" id="result-income">0원</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-item-label">신규 주담대 연원리금</span>
+                            <span class="result-item-value" id="result-new-payment">0원</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-item-label">보유 대출 연원리금</span>
+                            <span class="result-item-value" id="result-existing-payment">0원</span>
+                        </div>
+                        <div class="result-item">
+                            <span class="result-item-label">총 연원리금 상환액</span>
+                            <span class="result-item-value" id="result-total-payment">0원</span>
+                        </div>
+                    </div>
+
+                    <div class="stress-dsr-section" id="stress-dsr-section">
+                        <div class="stress-dsr-title">
+                            <span class="icon">⚡</span>
+                            <span>스트레스 DSR 적용 결과</span>
+                        </div>
+                        <div id="stress-dsr-content"></div>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <h3>💡 스트레스 DSR 적용 기준 (2025년 7월)</h3>
+                    <ul>
+                        <li><strong>변동형:</strong> 스트레스 금리 3.0% (100% 적용)</li>
+                        <li><strong>혼합형:</strong> 고정금리 기간에 따라 60~100% 차등 적용</li>
+                        <li><strong>주기형:</strong> 고정금리 기간에 따라 30~100% 차등 적용</li>
+                        <li>5년 미만 고정: 100% 적용 / 5~9년: 60~80% / 9~15년: 40~60% / 15~21년: 20~40% / 21년 이상: 미적용</li>
+                        <li>은행권 DSR 한도: 40% / 보험사 DSR 한도: 50%</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 숫자를 한글로 변환
+        function numberToKorean(num) {
+            if (!num || num === 0) return '';
+            
+            const units = ['', '만', '억', '조'];
+            const digits = ['', '일', '이', '삼', '사', '오', '육', '칠', '팔', '구'];
+            
+            let result = '';
+            let unitIndex = 0;
+            
+            while (num > 0) {
+                const part = num % 10000;
+                if (part > 0) {
+                    let partStr = '';
+                    
+                    const thousand = Math.floor(part / 1000);
+                    const hundred = Math.floor((part % 1000) / 100);
+                    const ten = Math.floor((part % 100) / 10);
+                    const one = part % 10;
+                    
+                    if (thousand > 0) partStr += digits[thousand] + '천';
+                    if (hundred > 0) partStr += digits[hundred] + '백';
+                    if (ten > 0) partStr += digits[ten] + '십';
+                    if (one > 0) partStr += digits[one];
+                    
+                    result = partStr + units[unitIndex] + (result ? ' ' : '') + result;
+                }
+                
+                num = Math.floor(num / 10000);
+                unitIndex++;
+            }
+            
+            return result + '원';
+        }
+
+        // 실시간 한글 금액 표시
+        function updateKoreanAmount(input, targetId) {
+            const value = parseInt(input.value) || 0;
+            const korean = numberToKorean(value);
+            document.getElementById(targetId).textContent = korean;
+        }
+
+        // 숫자 포맷팅
+        function formatNumber(num) {
+            return Math.round(num).toLocaleString('ko-KR');
+        }
+
+        // 고정금리 기간 옵션 업데이트
+        function updateFixedPeriodOptions() {
+            const loanType = document.getElementById('loan-type').value;
+            const fixedPeriodGroup = document.getElementById('fixed-period-group');
+            
+            if (loanType === 'mixed' || loanType === 'periodic') {
+                fixedPeriodGroup.style.display = 'block';
+                updateFixedPeriodInfo();
+            } else {
+                fixedPeriodGroup.style.display = 'none';
+            }
+        }
+
+        // 고정금리 기간 정보 업데이트
+        function updateFixedPeriodInfo() {
+            const loanType = document.getElementById('loan-type').value;
+            const fixedPeriod = parseInt(document.getElementById('fixed-period').value);
+            const infoDiv = document.getElementById('fixed-period-info');
+            
+            if (fixedPeriod === 0) {
+                infoDiv.textContent = '전 기간 변동금리 → 스트레스 금리 100% 적용';
+                return;
+            }
+
+            let applyRate = 0;
+            let category = '';
+
+            if (fixedPeriod < 5) {
+                applyRate = 100;
+                category = '5년 미만';
+            } else if (fixedPeriod < 9) {
+                applyRate = loanType === 'mixed' ? 80 : 40;
+                category = '5~9년';
+            } else if (fixedPeriod < 15) {
+                applyRate = loanType === 'mixed' ? 60 : 30;
+                category = '9~15년';
+            } else if (fixedPeriod < 21) {
+                applyRate = loanType === 'mixed' ? 40 : 20;
+                category = '15~21년';
+            } else {
+                applyRate = 0;
+                category = '21년 이상';
+            }
+
+            const typeKor = loanType === 'mixed' ? '혼합형' : '주기형';
+            
+            if (applyRate === 0) {
+                infoDiv.textContent = `${category} 고정 → 스트레스 금리 미적용`;
+            } else {
+                infoDiv.textContent = `${category} 고정 → ${typeKor} 스트레스 금리 ${applyRate}% 적용`;
+            }
+        }
+
+        // 원리금균등 상환
+        function calculateEqualPayment(principal, annualRate, years) {
+            const monthlyRate = annualRate / 100 / 12;
+            const months = years * 12;
+            
+            if (monthlyRate === 0) {
+                return principal / months;
+            }
+            
+            const payment = principal * (monthlyRate * Math.pow(1 + monthlyRate, months)) / 
+                           (Math.pow(1 + monthlyRate, months) - 1);
+            return payment;
+        }
+
+        // 원금균등 상환
+        function calculateEqualPrincipal(principal, annualRate, years) {
+            const monthlyPrincipal = principal / (years * 12);
+            const monthlyRate = annualRate / 100 / 12;
+            
+            const firstMonthInterest = principal * monthlyRate;
+            const lastMonthInterest = monthlyPrincipal * monthlyRate;
+            const avgMonthlyInterest = (firstMonthInterest + lastMonthInterest) / 2;
+            
+            const annualPayment = (monthlyPrincipal + avgMonthlyInterest) * 12;
+            return annualPayment;
+        }
+
+        // 만기일시 상환
+        function calculateMaturity(principal, annualRate) {
+            return principal * (annualRate / 100);
+        }
+
+        // 스트레스 금리 계산
+        function getStressRate(loanType, fixedPeriod, regionType) {
+            // 기준 스트레스 금리 (2025년 7월 기준)
+            const baseStressRate = 3.0;
+
+            if (loanType === 'variable') {
+                // 변동형: 100% 적용
+                return baseStressRate;
+            }
+
+            // 고정금리 기간에 따른 적용 비율
+            let applyRatio = 1.0;
+
+            if (fixedPeriod === 0) {
+                // 고정 기간 없음
+                applyRatio = 1.0;
+            } else if (fixedPeriod < 5) {
+                // 5년 미만
+                applyRatio = 1.0;
+            } else if (fixedPeriod < 9) {
+                // 5~9년
+                applyRatio = loanType === 'mixed' ? 0.8 : 0.4;
+            } else if (fixedPeriod < 15) {
+                // 9~15년
+                applyRatio = loanType === 'mixed' ? 0.6 : 0.3;
+            } else if (fixedPeriod < 21) {
+                // 15~21년
+                applyRatio = loanType === 'mixed' ? 0.4 : 0.2;
+            } else {
+                // 21년 이상
+                applyRatio = 0.0;
+            }
+
+            return baseStressRate * applyRatio;
+        }
+
+        // DSR 계산
+        function calculateDSR() {
+            const annualIncome = parseFloat(document.getElementById('annual-income').value) || 0;
+            const loanAmount = parseFloat(document.getElementById('loan-amount').value) || 0;
+            const loanPeriod = parseInt(document.getElementById('loan-period').value) || 30;
+            const loanRate = parseFloat(document.getElementById('loan-rate').value) || 0;
+            const repaymentMethod = document.getElementById('repayment-method').value;
+            const loanType = document.getElementById('loan-type').value;
+            const fixedPeriod = parseInt(document.getElementById('fixed-period').value) || 0;
+            const regionType = document.getElementById('region-type').value;
+            const existingInterest = parseFloat(document.getElementById('existing-interest').value) || 0;
+            const existingPrincipal = parseFloat(document.getElementById('existing-principal').value) || 0;
+
+            if (annualIncome === 0) {
+                alert('연소득을 입력해주세요.');
+                return;
+            }
+
+            if (loanAmount === 0) {
+                alert('주택담보대출 금액을 입력해주세요.');
+                return;
+            }
+
+            // 기본 연원리금 계산
+            let annualNewPayment = 0;
+            
+            if (repaymentMethod === 'equal-payment') {
+                const monthlyPayment = calculateEqualPayment(loanAmount, loanRate, loanPeriod);
+                annualNewPayment = monthlyPayment * 12;
+            } else if (repaymentMethod === 'equal-principal') {
+                annualNewPayment = calculateEqualPrincipal(loanAmount, loanRate, loanPeriod);
+            } else {
+                annualNewPayment = calculateMaturity(loanAmount, loanRate);
+            }
+
+            const existingPayment = existingInterest + existingPrincipal;
+            const totalPayment = annualNewPayment + existingPayment;
+            const basicDSR = (totalPayment / annualIncome) * 100;
+
+            // 결과 표시
+            document.getElementById('result').classList.add('show');
+            document.getElementById('basic-dsr').textContent = basicDSR.toFixed(2) + '%';
+            
+            let repaymentMethodKor = '';
+            if (repaymentMethod === 'equal-payment') repaymentMethodKor = '원리금균등';
+            else if (repaymentMethod === 'equal-principal') repaymentMethodKor = '원금균등';
+            else repaymentMethodKor = '만기일시';
+            
+            document.getElementById('basic-dsr-desc').textContent = 
+                `주택담보대출 ${formatNumber(loanAmount)}원의 경우\n` +
+                `연원리금 상환액은 ${formatNumber(annualNewPayment)}원이고\n` +
+                `(${loanPeriod}년, ${loanRate}%, ${repaymentMethodKor} 기준)\n\n` +
+                `보유하고 계신 대출의\n` +
+                `연원리금 상환액은 ${formatNumber(existingPayment)}원입니다.\n\n` +
+                `연소득은 ${formatNumber(annualIncome)}원이므로\n` +
+                `DSR은 약 ${basicDSR.toFixed(2)}%로 예상됩니다.`;
+
+            document.getElementById('result-income').textContent = formatNumber(annualIncome) + '원';
+            document.getElementById('result-new-payment').textContent = formatNumber(annualNewPayment) + '원';
+            document.getElementById('result-existing-payment').textContent = formatNumber(existingPayment) + '원';
+            document.getElementById('result-total-payment').textContent = formatNumber(totalPayment) + '원';
+
+            // 스트레스 DSR 계산
+            const stressRate = getStressRate(loanType, fixedPeriod, regionType);
+            const effectiveRate = loanRate + stressRate;
+
+            let stressAnnualPayment = 0;
+            if (repaymentMethod === 'equal-payment') {
+                const monthlyPayment = calculateEqualPayment(loanAmount, effectiveRate, loanPeriod);
+                stressAnnualPayment = monthlyPayment * 12;
+            } else if (repaymentMethod === 'equal-principal') {
+                stressAnnualPayment = calculateEqualPrincipal(loanAmount, effectiveRate, loanPeriod);
+            } else {
+                stressAnnualPayment = calculateMaturity(loanAmount, effectiveRate);
+            }
+
+            const stressTotalPayment = stressAnnualPayment + existingPayment;
+            const stressDSR = (stressTotalPayment / annualIncome) * 100;
+
+            let loanTypeKor = '';
+            let fixedPeriodDesc = '';
+            
+            if (loanType === 'variable') {
+                loanTypeKor = '변동형';
+                fixedPeriodDesc = '전 기간 변동금리';
+            } else if (loanType === 'mixed') {
+                loanTypeKor = '혼합형';
+                if (fixedPeriod === 0) {
+                    fixedPeriodDesc = '고정 기간 없음 (전 기간 변동)';
+                } else if (fixedPeriod < 5) {
+                    fixedPeriodDesc = `${fixedPeriod}년 고정 (5년 미만 - 100% 적용)`;
+                } else if (fixedPeriod < 9) {
+                    fixedPeriodDesc = `${fixedPeriod}년 고정 (5~9년 - 80% 적용)`;
+                } else if (fixedPeriod < 15) {
+                    fixedPeriodDesc = `${fixedPeriod}년 고정 (9~15년 - 60% 적용)`;
+                } else if (fixedPeriod < 21) {
+                    fixedPeriodDesc = `${fixedPeriod}년 고정 (15~21년 - 40% 적용)`;
+                } else {
+                    fixedPeriodDesc = `${fixedPeriod}년 고정 (21년 이상 - 미적용)`;
+                }
+            } else {
+                loanTypeKor = '주기형';
+                if (fixedPeriod === 0) {
+                    fixedPeriodDesc = '고정 기간 없음 (전 기간 변동)';
+                } else if (fixedPeriod < 5) {
+                    fixedPeriodDesc = `${fixedPeriod}년 주기 (5년 미만 - 100% 적용)`;
+                } else if (fixedPeriod < 9) {
+                    fixedPeriodDesc = `${fixedPeriod}년 주기 (5~9년 - 40% 적용)`;
+                } else if (fixedPeriod < 15) {
+                    fixedPeriodDesc = `${fixedPeriod}년 주기 (9~15년 - 30% 적용)`;
+                } else if (fixedPeriod < 21) {
+                    fixedPeriodDesc = `${fixedPeriod}년 주기 (15~21년 - 20% 적용)`;
+                } else {
+                    fixedPeriodDesc = `${fixedPeriod}년 주기 (21년 이상 - 미적용)`;
+                }
+            }
+
+            const regionKor = regionType === 'metro' ? '수도권' : '비수도권';
+
+            let stressDSRHtml = '';
+
+            if (stressRate === 0) {
+                stressDSRHtml = `
+                    <div class="stress-dsr-item">
+                        <div class="stress-dsr-item-title">스트레스 금리 미적용</div>
+                        <div style="font-size: 13px; opacity: 0.9; line-height: 1.6;">
+                            고정금리 기간이 21년 이상이므로 스트레스 DSR이 적용되지 않습니다.<br>
+                            기본 DSR ${basicDSR.toFixed(2)}%가 최종 DSR입니다.
+                        </div>
+                    </div>
+                `;
+            } else {
+                const applyPercent = ((stressRate / 3.0) * 100).toFixed(0);
+                
+                stressDSRHtml = `
+                    <div class="stress-dsr-item">
+                        <div class="stress-dsr-item-title">스트레스 DSR (${loanTypeKor}) 적용 시</div>
+                        <div style="font-size: 13px; opacity: 0.9; margin-bottom: 12px;">
+                            ${fixedPeriodDesc}<br>
+                            담보 주택 소재지: ${regionKor}
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>기준 대출 금리</span>
+                            <span>${loanRate.toFixed(2)}%</span>
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>스트레스 금리 (${applyPercent}% 적용)</span>
+                            <span>+ ${stressRate.toFixed(4)}%p</span>
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>적용 금리</span>
+                            <span>${effectiveRate.toFixed(4)}%</span>
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>연원리금 상환액</span>
+                            <span>${formatNumber(stressAnnualPayment)}원</span>
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>총 연원리금 상환액</span>
+                            <span>${formatNumber(stressTotalPayment)}원</span>
+                        </div>
+                        <div class="stress-dsr-item-row">
+                            <span>스트레스 DSR</span>
+                            <span style="color: #fff200; font-size: 20px;">${stressDSR.toFixed(2)}%</span>
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('stress-dsr-content').innerHTML = stressDSRHtml;
+            document.getElementById('result').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // 페이지 로드 시
+        window.onload = function() {
+            updateKoreanAmount(document.getElementById('annual-income'), 'annual-income-kr');
+            updateKoreanAmount(document.getElementById('loan-amount'), 'loan-amount-kr');
+            updateKoreanAmount(document.getElementById('existing-interest'), 'existing-interest-kr');
+            updateKoreanAmount(document.getElementById('existing-principal'), 'existing-principal-kr');
+            
+            document.getElementById('fixed-period').addEventListener('change', updateFixedPeriodInfo);
+        };
+    </script>
+</body>
+</html>
